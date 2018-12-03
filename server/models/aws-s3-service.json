@@ -1,0 +1,188 @@
+{
+    "virtual": true,
+    "queries": [
+        {
+            "id": "createBucket",
+            "type": "custom",
+            "opts": {
+                "model": "aws-s3-service",
+                "action": "createBucket",
+                "params": [
+                    {
+                        "name": "Bucket",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": "deleteBucket",
+            "type": "custom",
+            "opts": {
+                "model": "aws-s3-service",
+                "action": "deleteBucket",
+                "params": [
+                    {
+                        "name": "Bucket",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": "deleteBucketObject",
+            "type": "custom",
+            "opts": {
+                "model": "aws-s3-service",
+                "action": "deleteBucketObject",
+                "params": [
+                    {
+                        "name": "Bucket",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "Key",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": "deleteBucketObjects",
+            "type": "custom",
+            "opts": {
+                "model": "aws-s3-service",
+                "action": "deleteBucketObject",
+                "params": [
+                    {
+                        "name": "Bucket",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "Keys",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": "getBucketObject",
+            "type": "custom",
+            "opts": {
+                "model": "aws-s3-service",
+                "action": "getBucketObject",
+                "params": [
+                    {
+                        "name": "Bucket",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "Key",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": "getSignedUrl",
+            "type": "custom",
+            "opts": {
+                "model": "aws-s3-service",
+                "action": "getSignedUrl",
+                "params": [
+                    {
+                        "name": "Bucket",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "Key",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": "list",
+            "type": "custom",
+            "opts": {
+            "model": "aws-s3-service",
+            "action": "listBuckets",
+            "params": []
+            }
+        },
+        {
+            "id": "listBuckets",
+            "type": "custom",
+            "opts": {
+            "model": "aws-s3-service",
+            "action": "listBuckets",
+            "params": []
+            }
+        },
+        {
+            "id": "listBucketObjects",
+            "type": "custom",
+            "opts": {
+                "model": "aws-s3-service",
+                "action": "listBucketObjects",
+                "params": [
+                    {
+                        "name": "Bucket",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": "uploadToBucket",
+            "type": "custom",
+            "opts": {
+                "model": "aws-s3-service",
+                "action": "uploadToBucket",
+                "params": [
+                    {
+                        "name": "Bucket",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "Body",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": "uploadToBucketFromFilePath",
+            "type": "custom",
+            "opts": {
+                "model": "aws-s3-service",
+                "action": "uploadToBucketFromFilePath",
+                "params": [
+                    {
+                        "name": "Bucket",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            }
+        }
+    ]
+}

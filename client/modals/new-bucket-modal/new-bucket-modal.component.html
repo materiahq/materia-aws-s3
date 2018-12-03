@@ -1,0 +1,13 @@
+<ng-template #template>
+  <mat-toolbar color="primary">New bucket</mat-toolbar>
+  <form [formGroup]="bucketForm" fxLayout="column" (submit)="submit()">
+    <mat-form-field>
+      <input matInput placeholder="Name" formControlName="name">
+      <mat-error *ngIf="bucketForm?.get('name')['errors']?.required">This field is required</mat-error>
+    </mat-form-field>
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <button mat-raised-button color="primary" type="submit">SAVE</button>
+      <button mat-raised-button type="button" mat-dialog-close>Cancel</button>
+    </div>
+  </form>
+</ng-template>

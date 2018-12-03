@@ -1,0 +1,25 @@
+mat-button-toggle-group {
+    margin-top: 5px;
+}
+form {
+    padding: 0 24px 24px 24px;
+
+    mat-checkbox {
+        margin-bottom: 10px;
+    }
+    button {
+        margin: 5px;
+    }
+    .advance-settings {
+        margin-bottom: 15px;
+        .advance-settings-header {
+            min-height: 50px;
+            mat-icon {
+                margin-right: 8px;
+            }
+        }
+        .advance-settings-body {
+            padding: 0 15px;
+        }
+    }
+}

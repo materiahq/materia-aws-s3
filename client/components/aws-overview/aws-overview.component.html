@@ -1,0 +1,21 @@
+<div fxFlex fxLayout="column" fxLayoutAlign="start start">
+  <mat-toolbar color="primary">Overview</mat-toolbar>
+  <div fxLayout="column" style="padding: 0 10px;">
+    <div>
+      <h3>Prerequisitories</h3>
+      <ul>
+        <li>You need an AWS account to use this addon: <button mat-raised-button (click)="openInBrowser.emit('https://aws.amazon.com/')">Go
+            to AWS</button></li>
+        <li>Generate and get AWS API key:
+          <button mat-raised-button (click)="openInBrowser.emit('https://docs.aws.amazon.com/fr_fr/sdk-for-javascript/v2/developer-guide/getting-your-credentials.html')">Getting
+            AWS credentials</button>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h3>Configure the addon settings with your AWS credential</h3>
+      <p>Once your API key created you can fill the settings to initialize the addon: <button mat-raised-button (click)="openSetup.emit()">Fill
+          settings</button></p>
+    </div>
+  </div>
+</div>

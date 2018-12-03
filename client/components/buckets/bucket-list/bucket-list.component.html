@@ -1,0 +1,14 @@
+<mat-nav-list *ngIf="buckets?.length; else noBuckets">
+  <mat-list-item *ngFor="let bucket of buckets; trackByName" (click)="select.emit(bucket.Name)" [class.selected]="selected === bucket.Name">
+    <mat-icon mat-list-icon>folder</mat-icon>
+    <h4 matLine>{{ bucket.Name }}</h4>
+    <p matLine>{{ bucket.CreationDate | date:'mediumDate' }}</p>
+    <mat-divider></mat-divider>
+  </mat-list-item>
+</mat-nav-list>
+<ng-template #noBuckets>
+  <div fxLayout="column" fxFlex fxLayoutAlign="center center" [style.height]="'300px'">
+    <materia-empty-message message="You haven't any buckets yet"></materia-empty-message>
+    <button mat-button (click)="add.emit()">CREATE BUCKET</button>
+  </div>
+</ng-template>

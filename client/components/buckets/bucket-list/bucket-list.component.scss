@@ -1,0 +1,12 @@
+mat-nav-list {
+    padding: 0;
+    h4 {
+        font-size: 700;
+    }
+}
+materia-empty-message::ng-deep span {
+    margin: 10px;
+}
+.selected {
+    border-left: 3px solid #2196F3;
+}

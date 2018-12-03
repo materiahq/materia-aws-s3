@@ -1,0 +1,39 @@
+<div fxLayout="column" fxFlex>
+  <mat-toolbar fxLayout="row" fxLayoutAlign="start center" color="primary">
+    <h2 fxFlex>Buckets ({{buckets?.length || 0}})</h2>
+    <button mat-mini-fab (click)="openBucketModal()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-toolbar>
+  <div fxLayout="row" fxFlex *ngIf="! loadingBuckets; else loading">
+    <materia-bucket-list
+      fxLayout="column" [style.width]="selectedBucket ? '200px' : '100%'"
+      [buckets]="buckets"
+      [selected]="selectedBucket?.name"
+      (select)="selectBucket($event)"
+      (add)="openBucketModal()"
+    ></materia-bucket-list>
+    <mat-card fxLayout="column" fxFlex *ngIf="selectedBucket" [style.overflow]="'hidden'">
+      <mat-toolbar fxLayout="row" fxLayoutAlign="start center">
+        <span fxFlex>{{ selectedBucket.name }}</span>
+        <button mat-icon-button (click)="deleteBucket(selectedBucket.name)">
+          <mat-icon>
+            delete
+          </mat-icon>
+        </button>
+        <button mat-icon-button (click)="unselectBucket()">
+          <mat-icon>
+            close
+          </mat-icon>
+        </button>
+      </mat-toolbar>
+      <materia-bucket-object-list fxFlex fxLayout="column" [data]="selectedBucket.data" [loading]="loadingBucketContent" (openInBrowser)="openBucketObject($event)" (delete)="deleteBucketObject($event)"></materia-bucket-object-list>
+    </mat-card>
+  </div>
+</div>
+<materia-new-bucket-modal (save)="addBucket($event)"></materia-new-bucket-modal>
+<ng-template #loading>
+  <div fxLayout="column" fxLayoutAlign="center center" fxFlex>
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>

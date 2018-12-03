@@ -1,0 +1,25 @@
+
+:host {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+mat-card.container {
+	padding: 0;
+	margin: 8px;
+	h1 {
+		margin: 8px;
+	}
+	img {
+		margin-right: 10px;
+		height: 40px;
+	}
+}
+.active {
+	color: #2196F3;
+	font-weight: bold;
+	background: #ECEFF1;
+}
+button {
+	border-radius: 0;
+}

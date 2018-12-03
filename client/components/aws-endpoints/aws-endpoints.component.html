@@ -1,0 +1,129 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="start center" color="primary" [style.minHeight.px]="64">
+  <h2 fxFlex>Endpoints ({{awsEndpoints?.length || 0}})</h2>
+  <button mat-mini-fab (click)="consctructNewEndpoint()">
+    <mat-icon>add</mat-icon>
+  </button>
+</mat-toolbar>
+<div fxFlex fxLayout="column" [style.overflow]="'auto'" *ngIf="endpointBuckets && endpointBuckets.length; else noData">
+  <div *ngFor="let bucket of endpointBuckets">
+      <h3 fxLayout="row" fxLayoutAlign="start center">
+        <mat-icon>folder</mat-icon>
+        {{ bucket }}
+      </h3>
+      <mat-accordion *ngIf="(awsEndpoints | endpointsFilter:{bucket:bucket} | endpointsSort) as bucketEndpoints">
+          <mat-expansion-panel *ngFor="let e of bucketEndpoints" [expanded]="selectedEndpoint && e.type + e.url === selectedEndpoint.type + selectedEndpoint.url" (opened)="selectEndpoint(e)">
+            <mat-expansion-panel-header>
+              <mat-panel-title fxLayout="row" fxLayoutAlign="start center" style="width: 50%;">
+                  <span class="badge-method" [style.background]="methodsColor[endpointTypesMethod[e.type]]">{{ endpointTypesMethod[e.type] | uppercase }}</span> api{{e.url}}
+              </mat-panel-title>
+              <mat-panel-description fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon>auth</mat-icon>
+                {{e.permissions ? e.permissions : 'anyone'}}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <div fxLayout="column">
+                <div fxLayout="row" fxLayoutAlign="start center" class="desc">
+                  <mat-icon style="margin-right: 5px;">link</mat-icon>
+                  <div fxLayout="column" fxFlex>
+                    <div fxLayout="row" fxLayoutAlign="start center" style="margin: 5px 0;">
+                      <span class="badge-method" [style.background]="methodsColor[endpointTypesMethod[e.type]]">{{ endpointTypesMethod[e.type] | uppercase }}</span>
+                      <span class="desc-value" style="font-size: 18px; font-size: 500" fxFlex>{{apiUrl}}{{e.url}}</span>
+                    </div>
+                  </div>
+                  <button mat-icon-button matTooltip="Menu" style="margin: 5px;" [matMenuTriggerFor]="menu">
+                    <mat-icon>settings</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="editEndpoint()">
+                      <mat-icon>edit</mat-icon>
+                      <span>Edit</span>
+                    </button>
+                    <button mat-menu-item (click)="deleteEndpoint(e)">
+                      <mat-icon>delete</mat-icon>
+                      <span>Delete</span>
+                    </button>
+                  </mat-menu>
+                </div>
+                <div fxLayout="row wrap" *ngIf="e.type !== 'upload'">
+                  <div fxLayout="column" class="desc">
+                    <div fxLayout="row" fxLayoutAlign="start center" class="desc-title">
+                      <mat-icon>folder</mat-icon>
+                      <span>Bucket</span>
+                    </div>
+                    <span class="desc-value">{{e.bucket}}</span>
+                  </div>
+                  <div fxLayout="column" class="desc">
+                      <div fxLayout="row" fxLayoutAlign="start center" class="desc-title">
+                        <mat-icon>https</mat-icon>
+                        <span>Permissions</span>
+                      </div>
+                      <mat-chip-list *ngIf="e.permissions && e.permissions.length">
+                        <mat-chip *ngFor="let perm of e.permissions">{{ perm }}</mat-chip>
+                      </mat-chip-list>
+                      <mat-chip-list *ngIf="!e.permissions || ! e.permissions.length">
+                        <mat-chip>Anyone</mat-chip>
+                      </mat-chip-list>
+                    </div>
+                </div>
+                <div fxLayout="row wrap" *ngIf="e.type === 'upload'">
+                  <div fxLayout="column" class="desc">
+                    <div fxLayout="row" fxLayoutAlign="start center" class="desc-title">
+                      <mat-icon>folder</mat-icon>
+                      <span>Bucket</span>
+                    </div>
+                    <span class="desc-value">{{e.bucket}}</span>
+                  </div>
+                  <div fxLayout="column" class="desc">
+                    <div fxLayout="row" fxLayoutAlign="start center" class="desc-title">
+                      <i class="fa fa-database fa-2px" aria-hidden="true"></i>
+                      <span>Size limit</span>
+                    </div>
+                    <span class="desc-value">{{e.size_limit | materiaByte}}</span>
+                  </div>
+                  <div fxLayout="column" class="desc">
+                    <div fxLayout="row" fxLayoutAlign="start center" class="desc-title">
+                      <mat-icon>insert_drive_file</mat-icon>
+                      <span>MIME Types</span>
+                    </div>
+                    <mat-chip-list *ngIf="e.mime_types && e.mime_types.length">
+                      <mat-chip *ngFor="let type of e.mime_types">{{ type }}</mat-chip>
+                    </mat-chip-list>
+                    <mat-chip-list *ngIf="!e.mime_types || ! e.mime_types.length">
+                      <mat-chip>All</mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <div fxLayout="column" class="desc">
+                    <div fxLayout="row" fxLayoutAlign="start center" class="desc-title">
+                      <mat-icon>https</mat-icon>
+                      <span>Permissions</span>
+                    </div>
+                    <mat-chip-list *ngIf="e.permissions && e.permissions.length">
+                      <mat-chip *ngFor="let perm of e.permissions">{{ perm }}</mat-chip>
+                    </mat-chip-list>
+                    <mat-chip-list *ngIf="!e.permissions || ! e.permissions.length">
+                      <mat-chip>Anyone</mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </div>
+              </div>
+              <mat-divider *ngIf="e.type === 'upload'"></mat-divider>
+              <div fxLayout="column" fxLayoutAlign="center center" *ngIf="e.type === 'upload'">
+                <h4 class="desc-value" style="font-size: 18px; font-size: 300;">Test your endpoint</h4>
+                <div fxLayout="column" style="width: 100%; min-height: 250px;">
+                  <materia-upload-form [type]="e.upload_type ? e.upload_type : 'single'" [url]="apiUrl + e.url" [input_name]="e.input_name"
+                  ></materia-upload-form>
+                </div>
+              </div>
+            </ng-template>
+          </mat-expansion-panel>
+        </mat-accordion>
+  </div>
+</div>
+<materia-aws-endpoint-editor [allEndpoints]="allEndpoints" [permissions]="permissions" [buckets]="buckets" [awsEndpoints]="awsEndpoints" [endpoint]="selectedEndpoint" (submit)="saveEndpoint($event)"></materia-aws-endpoint-editor>
+<ng-template #noData>
+  <div fxLayout="column" fxLayoutAlign="center center" fxFlex>
+      <materia-empty-message [message]="emptyMessage"></materia-empty-message>
+      <button mat-raised-button color="primary" (click)="consctructNewEndpoint()">New Endpoint</button>
+  </div>
+</ng-template>

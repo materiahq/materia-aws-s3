@@ -1,0 +1,42 @@
+<div fxLayout="column" fxFlex style="position: relative;">
+  <div fxLayout="column" fxFlex style="overflow: auto;">
+    <table mat-table [dataSource]="dataSource" matSort  matSortActive="LastModified" matSortDirection="desc" multiTemplateDataRows *ngIf="dataSource; else noData;">
+      <ng-container matColumnDef="Key">
+        <th mat-header-cell *matHeaderCellDef> Key </th>
+        <td mat-cell *matCellDef="let element"> {{element.Key}} </td>
+      </ng-container>
+      <ng-container matColumnDef="Size">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
+        <td mat-cell *matCellDef="let element"> {{ element.Size | materiaByte }} </td>
+      </ng-container>
+      <ng-container matColumnDef="LastModified">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>LastModified</th>
+        <td mat-cell *matCellDef="let element">{{ element.LastModified | date:'mediumDate' }} </td>
+      </ng-container>
+      <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+              <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                <div fxLayout="row">
+                  <div fxLayout="row" fxLayout="center center">
+                      <button mat-raised-button color="primary" (click)="openInBrowser.emit(element.Key)">Open In Browser</button>
+                      <button mat-raised-button color="warn" (click)="delete.emit(element.Key)">Delete</button>
+                  </div>
+                </div>
+              </div>
+          </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="example-element-row" (click)="selectRow(row)"></tr>
+      <tr mat-row *matRowDef="let element; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+  </div>
+  <mat-paginator [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons class="mat-paginator-sticky" *ngIf="dataSource"></mat-paginator>
+  <div class="loading-shade" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
+<ng-template #noData>
+  <div fxLayout="column" fxLayoutAlign="center center" fxFlex>
+    <materia-empty-message message="This bucket is empty." *ngIf="! loading"></materia-empty-message>
+  </div>
+</ng-template>

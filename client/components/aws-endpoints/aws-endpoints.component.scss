@@ -1,0 +1,56 @@
+
+:host {
+    display: flex;
+    flex-direction: column !important;
+    flex: 1;
+}
+:host::ng-deep .mat-divider-horizontal {
+    position: relative;
+}
+materia-empty-message {
+    margin: 15px;
+}
+h3 {
+    margin: 12px;
+    mat-icon {
+        margin-right: 8px;
+    }
+}
+i.fa {
+    font-size: 24px;
+    width: 29px;
+}
+
+.desc {
+    padding: 0 15px 15px 15px;
+}
+
+.desc-title {
+    font-size: 15px;
+    font-weight: 400;
+    margin-bottom: 10px;
+
+    mat-icon {
+        margin-right: 8px;
+    }
+
+    i.fa {
+        font-size: 24px;
+        width: 24px;
+        margin-right: 8px;
+    }
+}
+
+.desc-value {
+    font-size: 15px;
+    font-weight: 200;
+}
+
+.badge-method {
+    padding: 5px;
+    margin-right: 8px;
+    border-radius: 3px;
+    max-height: 16px;
+    min-height: 16px;
+    height: 16px;
+}

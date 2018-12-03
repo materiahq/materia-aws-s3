@@ -1,0 +1,22 @@
+<mat-card fxLayout="column" fxFlex class="container">
+	<h1 fxLayout="row" fxLayoutAlign="start center" [style.minHeight.px]="56">
+		<img src="https://raw.githubusercontent.com/materiahq/materia-website-content/master/logo/addons/amazon-s3.png">
+		AWS S3 Service Addon
+	</h1>
+	<div fxLayout="row" fxLayout="start center" [style.minHeight.px]="50" *ngIf="hasAwsConfig">
+		<button mat-button (click)="section = 'buckets'" [class.active]="section === 'buckets'">
+			<span [matBadge]="buckets?.length || 0" matBadgeOverlap="false" [matBadgeHidden]="section === 'buckets'" [style.margin]="'0 10px'">Buckets</span>
+		</button>
+		<button mat-button (click)="section = 'endpoints'" [class.active]="section === 'endpoints'">
+			<span [matBadge]="settings.endpoints?.length || 0" matBadgeOverlap="false" [matBadgeHidden]="section === 'endpoints'" [style.margin]="'0 10px'">Endpoints</span>
+		</button>
+	</div>
+	<div fxLayout="column" fxFlex *ngIf="hasAwsConfig; else overview">
+		<materia-buckets *ngIf="section === 'buckets'" [baseUrl]="baseUrl" [buckets]="buckets" [loadingBuckets]="loadingBuckets" (refreshBuckets)="listBuckets()"></materia-buckets>
+		<materia-aws-endpoints *ngIf="section === 'endpoints'" [app]="app" [baseUrl]="baseUrl" [apiUrl]="apiUrl" [permissions]="permissions" [allEndpoints]="allEndpoints" [awsEndpoints]="settings.endpoints" [buckets]="buckets" (saveEndpoints)="saveEndpoints($event)"></materia-aws-endpoints>
+	</div>
+</mat-card>
+<materia-confirm-modal [message]="confirmMessage" [messageDetail]="confirmMessageDetail" [buttonNames]="['Cancel', 'Confirm']"></materia-confirm-modal>
+<ng-template #overview>
+	<materia-aws-overview (openInBrowser)="openInBrowser.emit($event)" (openSetup)="openSetup.emit()"></materia-aws-overview>
+</ng-template>
