@@ -1,6 +1,6 @@
 {
   "name": "@materia/aws-s3",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "description": "Upload files to Amazon Web Service S3",
   "author": "team@getmateria.com",
   "license": "MIT",
