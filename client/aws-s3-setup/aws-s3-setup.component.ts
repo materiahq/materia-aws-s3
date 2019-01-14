@@ -47,7 +47,7 @@ export class AwsS3SetupComponent implements OnInit {
 
   private getAwsConfig() {
     return this.http.get(`${this.baseUrl}/addons/@materia/aws-s3/setup`).toPromise().then((setup: any) => {
-        this.config = setup;
+        this.config = setup ? setup : {};
     });
   }
 }
