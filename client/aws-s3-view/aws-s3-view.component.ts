@@ -48,6 +48,7 @@ export class AwsS3ViewComponent implements OnInit {
     section = 'buckets';
     permissions: IPermission[];
     allEndpoints: IEndpoint[];
+    loadingBucketsError: boolean;
 
     get hasSettings(): boolean {
         return this.settings && Object.keys(this.settings).length ? true : false;
@@ -99,15 +100,20 @@ export class AwsS3ViewComponent implements OnInit {
 
     listBuckets() {
         this.loadingBuckets = true;
+        this.loadingBucketsError = false;
         return this.queryService.runQuery(this.baseUrl, 'aws-s3-service', 'list').then((result: any) => {
             this.buckets = [...result.data];
             this.loadingBuckets = false;
-        }).catch(err => this.snackbarError.emit(err));
+        }).catch(err => {
+            this.loadingBuckets = false;
+            this.loadingBucketsError = true;
+            return this.snackbarError.emit(err);
+        });
     }
 
     private getAwsEndpoints() {
         return this.http.get(`${this.baseUrl}/addons/@materia/aws-s3/setup`).toPromise().then((setup: any) => {
-            this.settings = Object.assign({}, this.settings, { endpoints: [...setup.endpoints] });
+            this.settings = Object.assign({}, this.settings, { endpoints: setup && setup.endpoints && setup.endpoints.length ? [...setup.endpoints] : [] });
         });
     }
 

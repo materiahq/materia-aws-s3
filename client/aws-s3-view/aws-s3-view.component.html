@@ -1,22 +1,35 @@
 <mat-card fxLayout="column" fxFlex class="container">
-	<h1 fxLayout="row" fxLayoutAlign="start center" [style.minHeight.px]="56">
+	<mat-toolbar color="primary" fxLayout="row" fxLayout="start center" [style.background]="'#232f3e'" [style.minHeight.px]="56" [style.fontWeight]="200">
 		<img src="https://raw.githubusercontent.com/materiahq/materia-website-content/master/logo/addons/amazon-s3.png">
-		AWS S3 Service Addon
-	</h1>
-	<div fxLayout="row" fxLayout="start center" [style.minHeight.px]="50" *ngIf="hasAwsConfig">
+		<span>AWS S3 Addon</span>
+	</mat-toolbar>
+	<div fxLayout="row" fxLayout="start center" [style.minHeight.px]="50" *ngIf="hasAwsConfig && ! loadingBucketsError">
 		<button mat-button (click)="section = 'buckets'" [class.active]="section === 'buckets'">
-			<span [matBadge]="buckets?.length || 0" matBadgeOverlap="false" [matBadgeHidden]="section === 'buckets'" [style.margin]="'0 10px'">Buckets</span>
+			<span [matBadge]="buckets?.length || 0" matBadgeOverlap="false" [style.margin]="'0 10px'">Buckets</span>
 		</button>
 		<button mat-button (click)="section = 'endpoints'" [class.active]="section === 'endpoints'">
-			<span [matBadge]="settings.endpoints?.length || 0" matBadgeOverlap="false" [matBadgeHidden]="section === 'endpoints'" [style.margin]="'0 10px'">Endpoints</span>
+			<span [matBadge]="settings.endpoints?.length || 0" matBadgeOverlap="false" [style.margin]="'0 10px'">Endpoints</span>
 		</button>
 	</div>
-	<div fxLayout="column" fxFlex *ngIf="hasAwsConfig; else overview">
-		<materia-buckets *ngIf="section === 'buckets'" [baseUrl]="baseUrl" [buckets]="buckets" [loadingBuckets]="loadingBuckets" (refreshBuckets)="listBuckets()"></materia-buckets>
-		<materia-aws-endpoints *ngIf="section === 'endpoints'" [app]="app" [baseUrl]="baseUrl" [apiUrl]="apiUrl" [permissions]="permissions" [allEndpoints]="allEndpoints" [awsEndpoints]="settings.endpoints" [buckets]="buckets" (saveEndpoints)="saveEndpoints($event)"></materia-aws-endpoints>
+	<div fxLayout="column" fxFlex *ngIf="hasAwsConfig; else overviewTemplate;">
+		<ng-container *ngIf="! loadingBucketsError; else loadingErrorTemplate">
+			<materia-buckets *ngIf="section === 'buckets'" [baseUrl]="baseUrl" [buckets]="buckets" [loadingBuckets]="loadingBuckets" (refreshBuckets)="listBuckets()"></materia-buckets>
+			<materia-aws-endpoints *ngIf="section === 'endpoints'" [app]="app" [baseUrl]="baseUrl" [apiUrl]="apiUrl" [permissions]="permissions" [allEndpoints]="allEndpoints" [awsEndpoints]="settings.endpoints" [buckets]="buckets" (saveEndpoints)="saveEndpoints($event)"></materia-aws-endpoints>
+		</ng-container>
 	</div>
 </mat-card>
 <materia-confirm-modal [message]="confirmMessage" [messageDetail]="confirmMessageDetail" [buttonNames]="['Cancel', 'Confirm']"></materia-confirm-modal>
-<ng-template #overview>
+<ng-template #overviewTemplate>
 	<materia-aws-overview (openInBrowser)="openInBrowser.emit($event)" (openSetup)="openSetup.emit()"></materia-aws-overview>
+</ng-template>
+<ng-template #loadingErrorTemplate>
+	<mat-card-content fxLayout="column" fxFlex fxLayoutAlign="center center" [style.margin]="'50px'" [style.background]="'#F44336'" [style.color]="'white'">
+		<span style="font-size: 15px; margin: 10px;">
+			There was a problem loading your buckets...
+		</span>
+		<span style="font-size: 15px; margin: 10px;">
+			This is probably an error in the settings:
+		</span>
+		<button mat-raised-button (click)="openSetup.emit()">OPEN SETTINGS</button>
+	</mat-card-content>
 </ng-template>
