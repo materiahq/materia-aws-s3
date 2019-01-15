@@ -103,7 +103,7 @@ export class AwsServiceLib {
     if (this.config && this.config.region && this.config.accessKeyId && this.config.secretAccessKey) {
       this.loaded = true;
       this.s3 = new S3({
-        apiVersion: '2006-03-01',
+        signatureVersion: 'v4',
         credentials: { accessKeyId: this.config.accessKeyId, secretAccessKey: this.config.secretAccessKey },
         region: this.config.region
       });
