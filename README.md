@@ -13,9 +13,9 @@ You need a AWS account to use this addon.
 
 ## Installation from NPM
 
-In your Materia application, run `npm install @materia/aws-s3` or `yarn add @materia/aws-s3`
+In your Materia application, run `npm install @materia/aws-s3 --save` or `yarn add @materia/aws-s3`.
 
-Restart Materia Designer
+Materia Designer will automatically restart.
 
 ## Installation from local files
 
