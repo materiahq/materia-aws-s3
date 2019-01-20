@@ -12,9 +12,7 @@ class BucketCtrl {
     config: { [param_name: string]: any; };
 
     constructor(private app: App) {
-        this.config = this.app.addons.addonsConfig['@materia/aws-s3'];
-        this.awsServiceLib = new AwsServiceLib(this.app, this.config);
-        this.awsServiceLib.loadConfig();
+        this.awsServiceLib = new AwsServiceLib(this.app);
     }
 
     uploadMultiple(req, res) {
@@ -101,7 +99,7 @@ class BucketCtrl {
                 }
             },
             storage: multerS3({
-                s3: this.awsServiceLib.s3,
+                s3: AwsServiceLib.s3,
                 bucket: config.bucket,
                 contentType: multerS3.AUTO_CONTENT_TYPE,
                 key: function (req, file, cb) {

@@ -2,6 +2,14 @@
     "virtual": true,
     "queries": [
         {
+            "id": "reloadS3",
+            "type": "custom",
+            "opts": {
+                "model": "aws-s3-service",
+                "action": "reloadS3"
+            }
+        },
+        {
             "id": "createBucket",
             "type": "custom",
             "opts": {

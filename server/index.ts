@@ -6,12 +6,10 @@ export default class AwsS3 {
     public static logo = 'https://raw.githubusercontent.com/materiahq/materia-website-content/master/logo/addons/amazon-s3.png';
     private awsUploader: AwsServiceLib;
 
-    constructor(private app: App, private config: AwsS3ServiceConfig) {
-        this.awsUploader = new AwsServiceLib(this.app, this.config);
-    }
+    constructor(private app: App, private config: AwsS3ServiceConfig) {}
 
     start() {
-        this.awsUploader.loadConfig();
+        this.awsUploader = new AwsServiceLib(this.app);
     }
 
     afterLoadAPI() {
