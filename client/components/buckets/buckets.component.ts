@@ -14,6 +14,7 @@ export class BucketsComponent implements OnInit {
   @Input() baseUrl: string;
   @Input() buckets: any[];
   @Input() loadingBuckets: boolean;
+  @Input() firstLoad: boolean;
 
   @Output() download = new EventEmitter<string>();
   @Output() refreshBuckets = new EventEmitter<void>();

@@ -1,5 +1,5 @@
 <div fxLayout="column" fxFlex>
-  <mat-toolbar fxLayout="row" fxLayoutAlign="start center" color="primary">
+  <mat-toolbar fxLayout="row" fxLayoutAlign="start center" color="primary" *ngIf="! firstLoad">
     <h2 fxFlex>Buckets ({{buckets?.length || 0}})</h2>
     <button mat-mini-fab (click)="openBucketModal()">
       <mat-icon>add</mat-icon>

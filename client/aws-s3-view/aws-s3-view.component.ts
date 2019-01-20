@@ -49,6 +49,7 @@ export class AwsS3ViewComponent implements OnInit {
     permissions: IPermission[];
     allEndpoints: IEndpoint[];
     loadingBucketsError: boolean;
+    firstLoad = true;
 
     get hasSettings(): boolean {
         return this.settings && Object.keys(this.settings).length ? true : false;
@@ -67,12 +68,18 @@ export class AwsS3ViewComponent implements OnInit {
         if ( ! this.settings.endpoints ) {
             this.settings.endpoints = [];
         }
-        if (this.hasAwsConfig) {
-            this.listBuckets();
-            this.getMateriaPermissions();
-            this.getMateriaEndpoints();
-            this.getAwsEndpoints();
-        }
+        this.initializeS3().then(() => {
+            if (this.hasAwsConfig) {
+                this.listBuckets();
+                this.getMateriaPermissions();
+                this.getMateriaEndpoints();
+                this.getAwsEndpoints();
+            }
+        });
+    }
+
+    initializeS3() {
+        return this.queryService.runQuery(this.baseUrl, 'aws-s3-service', 'reloadS3');
     }
 
     confirm(message: string, messageDetail?: string): Promise<string> {
@@ -103,6 +110,7 @@ export class AwsS3ViewComponent implements OnInit {
         this.loadingBucketsError = false;
         return this.queryService.runQuery(this.baseUrl, 'aws-s3-service', 'list').then((result: any) => {
             this.buckets = [...result.data];
+            this.firstLoad = false;
             this.loadingBuckets = false;
         }).catch(err => {
             this.loadingBuckets = false;
@@ -113,7 +121,11 @@ export class AwsS3ViewComponent implements OnInit {
 
     private getAwsEndpoints() {
         return this.http.get(`${this.baseUrl}/addons/@materia/aws-s3/setup`).toPromise().then((setup: any) => {
-            this.settings = Object.assign({}, this.settings, { endpoints: setup && setup.endpoints && setup.endpoints.length ? [...setup.endpoints] : [] });
+            this.settings = Object.assign(
+                {},
+                this.settings,
+                { endpoints: setup && setup.endpoints && setup.endpoints.length ? [...setup.endpoints] : [] }
+            );
         });
     }
 
