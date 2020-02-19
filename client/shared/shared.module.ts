@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -27,7 +27,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 export const SHARED_MODULES = [
-  FormsModule,
   ReactiveFormsModule,
   MatButtonModule,
   MatRippleModule,
@@ -58,6 +57,6 @@ export const SHARED_MODULES = [
 
 @NgModule({
   imports: [],
-  exports: [...SHARED_MODULES]
+  exports: [SHARED_MODULES]
 })
 export class SharedModule { }

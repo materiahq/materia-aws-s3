@@ -2,11 +2,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AddonView } from '@materia/addons';
-import { MatDialog } from '@angular/material/dialog';
+// import { MatDialog } from '@angular/material/dialog';
 import { IApp, IEndpoint, IPermission } from '@materia/interfaces';
 
-import { ConfirmModalComponent } from '../modals';
-import { QueryService } from '../services/query.service';
+// import { ConfirmModalComponent } from '../modals';
+// import { QueryService } from '../services/query.service';
 
 export interface SelectedBucket {
     name: string;
@@ -23,8 +23,7 @@ export interface AwsS3Config {
 @Component({
     selector: 'materia-aws-s3-uploader-view',
     templateUrl: './aws-s3-view.component.html',
-    styleUrls: ['./aws-s3-view.component.scss'],
-    providers: []
+    styleUrls: ['./aws-s3-view.component.scss']
 })
 export class AwsS3ViewComponent implements OnInit {
     @Input() app: IApp;
@@ -38,7 +37,7 @@ export class AwsS3ViewComponent implements OnInit {
     @Output() snackbarError = new EventEmitter<string>();
     @Output() snackbarSuccess = new EventEmitter<string>();
 
-    @ViewChild(ConfirmModalComponent) confirmModalComponent: ConfirmModalComponent;
+    // @ViewChild(ConfirmModalComponent) confirmModalComponent: ConfirmModalComponent;
 
     buckets = [];
 
@@ -59,7 +58,7 @@ export class AwsS3ViewComponent implements OnInit {
         return this.hasSettings && this.settings.secretAccessKey && this.settings.region && this.settings.accessKeyId ? true : false;
     }
 
-    constructor(private dialog: MatDialog, private http: HttpClient, private queryService: QueryService) { }
+    constructor(private http: HttpClient) { }
 
     ngOnInit() {
         if ( ! this.settings ) {
@@ -68,19 +67,19 @@ export class AwsS3ViewComponent implements OnInit {
         if ( ! this.settings.endpoints ) {
             this.settings.endpoints = [];
         }
-        this.initializeS3().then(() => {
-            if (this.hasAwsConfig) {
-                this.listBuckets();
-                this.getMateriaPermissions();
-                this.getMateriaEndpoints();
-                this.getAwsEndpoints();
-            }
-        });
+        // this.initializeS3().then(() => {
+        //     if (this.hasAwsConfig) {
+        //         this.listBuckets();
+        //         this.getMateriaPermissions();
+        //         this.getMateriaEndpoints();
+        //         this.getAwsEndpoints();
+        //     }
+        // });
     }
 
-    initializeS3() {
-        return this.queryService.runQuery(this.baseUrl, 'aws-s3-service', 'reloadS3');
-    }
+    // initializeS3() {
+    //     return this.queryService.runQuery(this.baseUrl, 'aws-s3-service', 'reloadS3');
+    // }
 
     confirm(message: string, messageDetail?: string): Promise<string> {
         this.confirmMessage = message;
@@ -89,8 +88,9 @@ export class AwsS3ViewComponent implements OnInit {
         } else {
             this.confirmMessageDetail = null;
         }
-        const dialogRef = this.dialog.open(this.confirmModalComponent.template);
-        return dialogRef.afterClosed().toPromise();
+        return Promise.resolve('');
+        // const dialogRef = this.dialog.open(this.confirmModalComponent.template);
+        // return dialogRef.afterClosed().toPromise();
     }
 
     saveEndpoints(endpoints) {
@@ -108,15 +108,15 @@ export class AwsS3ViewComponent implements OnInit {
     listBuckets() {
         this.loadingBuckets = true;
         this.loadingBucketsError = false;
-        return this.queryService.runQuery(this.baseUrl, 'aws-s3-service', 'list').then((result: any) => {
-            this.buckets = [...result.data];
-            this.firstLoad = false;
-            this.loadingBuckets = false;
-        }).catch(err => {
-            this.loadingBuckets = false;
-            this.loadingBucketsError = true;
-            return this.snackbarError.emit(err);
-        });
+        // return this.queryService.runQuery(this.baseUrl, 'aws-s3-service', 'list').then((result: any) => {
+        //     this.buckets = [...result.data];
+        //     this.firstLoad = false;
+        //     this.loadingBuckets = false;
+        // }).catch(err => {
+        //     this.loadingBuckets = false;
+        //     this.loadingBucketsError = true;
+        //     return this.snackbarError.emit(err);
+        // });
     }
 
     private getAwsEndpoints() {

@@ -18,7 +18,6 @@
 		</ng-container>
 	</div>
 </mat-card>
-<materia-confirm-modal [message]="confirmMessage" [messageDetail]="confirmMessageDetail" [buttonNames]="['Cancel', 'Confirm']"></materia-confirm-modal>
 <ng-template #overviewTemplate>
 	<materia-aws-overview (openInBrowser)="openInBrowser.emit($event)" (openSetup)="openSetup.emit()"></materia-aws-overview>
 </ng-template>
