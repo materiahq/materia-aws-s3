@@ -13,7 +13,15 @@
 	</div>
 	<div fxLayout="column" fxFlex *ngIf="hasAwsConfig; else overviewTemplate;">
 		<ng-container *ngIf="! loadingBucketsError; else loadingErrorTemplate">
-			<materia-buckets *ngIf="section === 'buckets'" [baseUrl]="baseUrl" [buckets]="buckets" [firstLoad]="firstLoad" [loadingBuckets]="loadingBuckets" (refreshBuckets)="listBuckets()"></materia-buckets>
+			<materia-buckets *ngIf="section === 'buckets'"
+				[baseUrl]="baseUrl"
+				[buckets]="buckets"
+				[firstLoad]="firstLoad"
+				[loadingBuckets]="loadingBuckets"
+				(refreshBuckets)="listBuckets()"
+				(snackbarSuccess)="snackbarSuccess.emit($event)"
+				(snackbarError)="snackbarError.emit($event)"
+				(openInBrowser)="openInBrowser.emit($event)"></materia-buckets>
 			<materia-aws-endpoints *ngIf="section === 'endpoints'" [app]="app" [baseUrl]="baseUrl" [apiUrl]="apiUrl" [permissions]="permissions" [allEndpoints]="allEndpoints" [awsEndpoints]="settings.endpoints" [buckets]="buckets" (saveEndpoints)="saveEndpoints($event)"></materia-aws-endpoints>
 		</ng-container>
 	</div>

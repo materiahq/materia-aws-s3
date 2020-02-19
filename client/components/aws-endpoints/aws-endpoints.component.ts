@@ -3,8 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { IApp, IPermission, IEndpoint } from '@materia/interfaces';
 
-import { AwsEndpointEditorComponent } from '../../modals';
-import { AwsS3ViewComponent } from '../../aws-s3-view/aws-s3-view.component';
+import { AwsEndpointEditorComponent, ConfirmModalComponent } from '../../modals';
 
 const path = {
   join: (...args) => {
@@ -59,7 +58,6 @@ export class AwsEndpointsComponent implements OnInit, OnChanges {
 
   constructor(
     private dialog: MatDialog,
-    private awsS3ViewComponent: AwsS3ViewComponent,
     private http: HttpClient
   ) { }
 
@@ -94,7 +92,10 @@ export class AwsEndpointsComponent implements OnInit, OnChanges {
   }
 
   async deleteEndpoint(endpoint) {
-    const result = await this.awsS3ViewComponent.confirm(`Are your sure you want to delete endpoint: ${endpoint.url} ?`);
+    const confirmModalInstance = await this.dialog.open(ConfirmModalComponent);
+    confirmModalInstance.componentInstance.message = `Are your sure you want to delete endpoint: ${endpoint.url} ?`;
+    confirmModalInstance.componentInstance.buttonNames = ['Cancel', 'Confirm'];
+    const result = await confirmModalInstance.afterClosed().toPromise();
     if (result === 'confirm') {
       await this.deleteEndpointInServer(endpoint);
       const endpoints = [...this.awsEndpoints];

@@ -2,8 +2,7 @@ import { Component, OnInit, Output, ViewChild, EventEmitter, Input } from '@angu
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 
 import { QueryService } from '../../services/query.service';
-import { NewBucketModalComponent } from '../../modals';
-import { AwsS3ViewComponent, SelectedBucket } from '../../aws-s3-view/aws-s3-view.component';
+import { NewBucketModalComponent, ConfirmModalComponent } from '../../modals';
 
 @Component({
   selector: 'materia-buckets',
@@ -18,10 +17,13 @@ export class BucketsComponent implements OnInit {
 
   @Output() download = new EventEmitter<string>();
   @Output() refreshBuckets = new EventEmitter<void>();
+  @Output() snackbarError = new EventEmitter<string>();
+  @Output() snackbarSuccess = new EventEmitter<string>();
+  @Output() openInBrowser = new EventEmitter<string>();
 
   @ViewChild(NewBucketModalComponent) bucketModalComponent: NewBucketModalComponent;
 
-  selectedBucket: SelectedBucket;
+  selectedBucket: any;
   awsS3EntityName = 'aws-s3-service';
   loadingBucketContent: boolean;
   bucketModalInstance: MatDialogRef<any>;
@@ -31,8 +33,7 @@ export class BucketsComponent implements OnInit {
 
   constructor(
     private queryService: QueryService,
-    private dialog: MatDialog,
-    private awsS3ViewComponent: AwsS3ViewComponent
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() { }
@@ -40,31 +41,37 @@ export class BucketsComponent implements OnInit {
   addBucket(bucketName) {
     this.bucketModalInstance.close();
     this.queryService.runQuery(this.baseUrl, this.awsS3EntityName, 'createBucket', { Bucket: bucketName }).then(() => {
-      this.awsS3ViewComponent.snackbarSuccess.emit(`Bucket '${bucketName}' successfully created`);
+      this.snackbarSuccess.emit(`Bucket '${bucketName}' successfully created`);
       this.unselectBucket();
       this.refreshBuckets.emit();
-    }).catch(err => this.awsS3ViewComponent.snackbarError.emit(err));
+    }).catch(err => this.snackbarError.emit(err));
 
   }
 
   async deleteBucket(bucketName) {
-    const result = await this.awsS3ViewComponent.confirm(`Are you sure you want to delete the bucket: "${bucketName}" ?`);
+    const confirmModalInstance = await this.dialog.open(ConfirmModalComponent);
+    confirmModalInstance.componentInstance.message = `Are you sure you want to delete the bucket: "${bucketName}" ?`;
+    confirmModalInstance.componentInstance.buttonNames = ['Cancel', 'Confirm'];
+    const result = await confirmModalInstance.afterClosed().toPromise();
     if (result === 'confirm') {
       this.queryService.runQuery(this.baseUrl, this.awsS3EntityName, 'deleteBucket', { Bucket: bucketName }).then(() => {
         this.unselectBucket();
         this.refreshBuckets.emit();
-      }).catch(err => this.awsS3ViewComponent.snackbarError.emit(err));
+      }).catch(err => this.snackbarError.emit(err));
     }
   }
 
   async deleteBucketObject(objectKey) {
-    const result = await this.awsS3ViewComponent.confirm(`Are you sure you want to delete your file: "${objectKey}" ?`);
+    const confirmModalInstance = await this.dialog.open(ConfirmModalComponent);
+    confirmModalInstance.componentInstance.message = `Are you sure you want to delete your file: "${objectKey}" ?`;
+    confirmModalInstance.componentInstance.buttonNames = ['Cancel', 'Confirm'];
+    const result = await confirmModalInstance.afterClosed().toPromise();
     if (result === 'confirm') {
       this.queryService.runQuery(this.baseUrl, this.awsS3EntityName, 'deleteBucketObject',
         { Bucket: this.selectedBucket.name, Key: objectKey })
         .then(() => {
           this.listBucketObjects(this.selectedBucket.name);
-        }).catch(err => this.awsS3ViewComponent.snackbarError.emit(err));
+        }).catch(err => this.snackbarError.emit(err));
     }
   }
 
@@ -72,11 +79,11 @@ export class BucketsComponent implements OnInit {
     this.queryService.runQuery(this.baseUrl, this.awsS3EntityName, 'getSignedUrl', { Bucket: this.selectedBucket.name, Key: objectKey })
       .then((result: { count: number, data: any[] }) => {
         const url = result.data[0].response;
-        this.awsS3ViewComponent.openInBrowser.emit(url);
-      }).catch(err => this.awsS3ViewComponent.snackbarError.emit(err));
+        this.openInBrowser.emit(url);
+      }).catch(err => this.snackbarError.emit(err));
   }
 
-  listBucketObjects(bucket): Promise<SelectedBucket> {
+  listBucketObjects(bucket): Promise<any> {
     this.loadingBucketContent = true;
     if (!this.selectedBucket) {
       this.selectedBucket = Object.assign({});
@@ -88,7 +95,7 @@ export class BucketsComponent implements OnInit {
         this.loadingBucketContent = false;
         return this.selectedBucket;
       }).catch(err => {
-        this.awsS3ViewComponent.snackbarError.emit(err);
+        this.snackbarError.emit(err);
         return Promise.reject(err);
       });
   }

@@ -18,8 +18,6 @@ export class ConfirmModalComponent implements OnInit {
     @Input() messageDetail: string;
     @Input() buttonNames: Array<string>;
 
-    @ViewChild('confirmModal') template: TemplateRef<any>;
-
     constructor() { }
 
     ngOnInit() { }

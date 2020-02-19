@@ -30,8 +30,6 @@ import { EndpointsSortPipe } from './pipes/endpoints-sort';
 @NgModule({
   imports: [CommonModule, SharedModule],
   declarations: [
-    AwsS3ViewComponent,
-    AwsS3SetupComponent,
     BucketListComponent,
     EmptyMessageComponent,
     BucketObjectListComponent,
@@ -44,7 +42,9 @@ import { EndpointsSortPipe } from './pipes/endpoints-sort';
     AwsEndpointEditorComponent,
     AwsOverviewComponent,
     EndpointsFilterPipe,
-    EndpointsSortPipe
+    EndpointsSortPipe,
+    AwsS3ViewComponent,
+    AwsS3SetupComponent
   ],
   exports: [AwsS3ViewComponent, AwsS3SetupComponent]
 })

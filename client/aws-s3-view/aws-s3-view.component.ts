@@ -1,12 +1,9 @@
 
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AddonView } from '@materia/addons';
-// import { MatDialog } from '@angular/material/dialog';
 import { IApp, IEndpoint, IPermission } from '@materia/interfaces';
-
-// import { ConfirmModalComponent } from '../modals';
-// import { QueryService } from '../services/query.service';
+import { QueryService } from '../services/query.service';
 
 export interface SelectedBucket {
     name: string;
@@ -37,8 +34,6 @@ export class AwsS3ViewComponent implements OnInit {
     @Output() snackbarError = new EventEmitter<string>();
     @Output() snackbarSuccess = new EventEmitter<string>();
 
-    // @ViewChild(ConfirmModalComponent) confirmModalComponent: ConfirmModalComponent;
-
     buckets = [];
 
     confirmMessage: string;
@@ -58,39 +53,27 @@ export class AwsS3ViewComponent implements OnInit {
         return this.hasSettings && this.settings.secretAccessKey && this.settings.region && this.settings.accessKeyId ? true : false;
     }
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private queryService: QueryService) { }
 
     ngOnInit() {
         if ( ! this.settings ) {
             this.settings = {};
         }
         if ( ! this.settings.endpoints ) {
-            this.settings.endpoints = [];
+            this.settings = {...this.settings, endpoints: []};
         }
-        // this.initializeS3().then(() => {
-        //     if (this.hasAwsConfig) {
-        //         this.listBuckets();
-        //         this.getMateriaPermissions();
-        //         this.getMateriaEndpoints();
-        //         this.getAwsEndpoints();
-        //     }
-        // });
+        this.initializeS3().then(() => {
+            if (this.hasAwsConfig) {
+                this.listBuckets();
+                this.getMateriaPermissions();
+                this.getMateriaEndpoints();
+                this.getAwsEndpoints();
+            }
+        });
     }
 
-    // initializeS3() {
-    //     return this.queryService.runQuery(this.baseUrl, 'aws-s3-service', 'reloadS3');
-    // }
-
-    confirm(message: string, messageDetail?: string): Promise<string> {
-        this.confirmMessage = message;
-        if (messageDetail) {
-            this.confirmMessageDetail = messageDetail;
-        } else {
-            this.confirmMessageDetail = null;
-        }
-        return Promise.resolve('');
-        // const dialogRef = this.dialog.open(this.confirmModalComponent.template);
-        // return dialogRef.afterClosed().toPromise();
+    initializeS3() {
+        return this.queryService.runQuery(this.baseUrl, 'aws-s3-service', 'reloadS3');
     }
 
     saveEndpoints(endpoints) {
@@ -108,15 +91,15 @@ export class AwsS3ViewComponent implements OnInit {
     listBuckets() {
         this.loadingBuckets = true;
         this.loadingBucketsError = false;
-        // return this.queryService.runQuery(this.baseUrl, 'aws-s3-service', 'list').then((result: any) => {
-        //     this.buckets = [...result.data];
-        //     this.firstLoad = false;
-        //     this.loadingBuckets = false;
-        // }).catch(err => {
-        //     this.loadingBuckets = false;
-        //     this.loadingBucketsError = true;
-        //     return this.snackbarError.emit(err);
-        // });
+        return this.queryService.runQuery(this.baseUrl, 'aws-s3-service', 'list').then((result: any) => {
+            this.buckets = [...result.data];
+            this.firstLoad = false;
+            this.loadingBuckets = false;
+        }).catch(err => {
+            this.loadingBuckets = false;
+            this.loadingBucketsError = true;
+            return this.snackbarError.emit(err);
+        });
     }
 
     private getAwsEndpoints() {
