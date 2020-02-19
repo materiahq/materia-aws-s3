@@ -2,7 +2,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AddonView } from '@materia/addons';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { IApp, IEndpoint, IPermission } from '@materia/interfaces';
 
 import { ConfirmModalComponent } from '../modals';

@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, ViewChild, EventEmitter, Input } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 
 import { QueryService } from '../../services/query.service';
 import { NewBucketModalComponent } from '../../modals';

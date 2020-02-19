@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, ViewChild, EventEmitter, Output, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { IApp, IPermission, IEndpoint } from '@materia/interfaces';
 
